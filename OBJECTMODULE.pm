@@ -8,12 +8,12 @@ use warnings;
 #return string of object
 sub to_string{
     my ($self, @args) = @_;
-    my @string = ();
+    my @strings = ();
     foreach my $attr (@args)
     {
-        push @string, "$self->{$attr}";
+        push @strings, "$self->{$attr}";
     }
-    return @string;
+    return @strings;
 }
 
 sub set_attr{

@@ -1,19 +1,16 @@
 #!/usr/bin/perl
+
+#will add current working directory to @INC
 BEGIN{unshift @INC, "."}
+
 use strict;
 use warnings;
 
 use OBJECTMODULE;
 use TEST;
 
-unless ($ARGV[0])
-{
-    message();
-}
-
 # For each option, call appropriate subroutine.
 my %dispatchList = (
-    "message"   => \&message,
     "run"       => \&run,
 );
 
@@ -23,6 +20,8 @@ ProcessArgs (\@ARGV, \%dispatchList);
 sub ProcessArgs {
     my ($argv, $dispatchList) = @_;
 
+    unless (@ARGV) {message(0);}
+    else{
         foreach my $arg (@$argv)
         {
             if (exists $dispatchList->{$arg})
@@ -32,16 +31,8 @@ sub ProcessArgs {
                 # Call it.
                 &$subReference();
             }
-            #option does not exist.
-            else
-            {
-                if (exists $dispatchList->{"message"})
-                {
-                    my $errorNo = 0;
-                    &{$dispatchList{"message"}($errorNo)};
-                }
-            }
         }
+    }
 }
 
 sub run {
@@ -66,16 +57,12 @@ sub run {
         my $sub = shift @args;
         print "sub -- $sub\n";
 
-        if (exists $dispatchList{$sub})
-        {
-            eval { &{$dispatchList{$sub}}($object, @args) };
-            warn $@ if $@;
-        }
+        eval { &{$dispatchList{$sub}}($object, @args) };
+        warn $@ if $@;
+
 
         $command = <STDIN>;
         chomp $command;
-        print "command -- $command\n";
-#        TEST::parsePCT($object);
     }
 }
 #OBJECTMODULE METHODS
@@ -102,30 +89,27 @@ sub to_string {
 sub help {
     my ($self, @args) = @_;
     #user prompt
-    my @commandList = (
-                       '==============================',
-                       'POSSIBLE COMMANDS',
-                       '==============================',
-                       'set_attr <attribute> <value>',
-                       'get_attr <attribute>',
-                       'to_string <attribute>',
-                       '=============================='
+    my %commandList = (
+                       '1' => 'set_attr <attribute> <value>',
+                       '2' => 'get_attr <attribute>',
+                       '3' => 'to_string <attribute>',
+                       '4' => 'test <args>'
     );
-    foreach (@commandList){print "$_\n";}
+    foreach my $key (sort keys %commandList){print "\'$key\' => \'$commandList{$key}\'\n";}
 }
-#help
+
 sub test {
     my ($self, @args) = @_;
-    $self->TEST:: . "$args[0]";
+    my $sub = shift @args;
+    TEST->$sub(@args);
 }
 #user messages
 sub message {
     my ($errorNo) = @_;
-    unless ($errorNo)
-    {
-        print "from \'" . caller . "\' -- you need to enter the sub-routine to be run\n";
-    }
-
+    my %errorLog = (
+                    '0' => "from \'" . caller . "\' -- you need to enter the sub-routine to be run\n"
+    );
+    print "error : $errorLog{$errorNo}\n";
 }
 
 1;
