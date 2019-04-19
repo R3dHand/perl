@@ -1,4 +1,4 @@
-TEST.pm
+#!/usr/bin/perl
 package TEST;
 
 use parent 'OBJECTMODULE';
