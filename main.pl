@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+BEGIN{unshift @INC, "."}
 use strict;
 use warnings;
 
@@ -56,9 +57,6 @@ sub run {
                         "help"      => \&help,
                        );
 
-    print "=============\n";
-    print "enter command\n";
-    print "=============\n";
     my $command = <STDIN>;
     chomp $command;
 
@@ -74,9 +72,6 @@ sub run {
             warn $@ if $@;
         }
 
-        print "=============\n";
-        print "enter command\n";
-        print "=============\n";
         $command = <STDIN>;
         chomp $command;
         print "command -- $command\n";
