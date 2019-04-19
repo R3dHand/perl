@@ -3,10 +3,10 @@ package OBJECT;
 use strict;
 use warnings;
 
-sub new {
-    my ($self, %args) = @_;
-    my $self = bless \%args, $class
+
+sub new{
+    my ($class,%args) = @_;
+    my $self = bless \%args, $class;
 }
 
 1;
-

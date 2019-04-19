@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 use strict;
 use warnings;
 
@@ -23,25 +22,25 @@ ProcessArgs (\@ARGV, \%dispatchList);
 sub ProcessArgs {
     my ($argv, $dispatchList) = @_;
 
-    foreach my $arg (@$argv)
-    {
-        if (exists $dispatchList->{$arg})
+        foreach my $arg (@$argv)
         {
-            # The value must be a reference to a subroutine
-            my $subReference = $dispatchList->{$arg};
-            # Call it.
-            &$subReference();
-        }
-        #option does not exist.
-        else
-        {
-            if (exists $dispatchList->{"message"})
+            if (exists $dispatchList->{$arg})
             {
-                my $errorNo = 0;
-                &{$dispatchList{"message"}($errorNo)};
+                # The value must be a reference to a subroutine
+                my $subReference = $dispatchList->{$arg};
+                # Call it.
+                &$subReference();
+            }
+            #option does not exist.
+            else
+            {
+                if (exists $dispatchList->{"message"})
+                {
+                    my $errorNo = 0;
+                    &{$dispatchList{"message"}($errorNo)};
+                }
             }
         }
-    }
 }
 
 sub run {
@@ -135,4 +134,3 @@ sub message {
 }
 
 1;
-
